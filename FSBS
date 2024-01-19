@@ -1,0 +1,35 @@
+#!/bin/bash
+
+input_type=$(echo "$1" | tr "[:upper:]" "[:lower:]")
+
+#run_type=""
+case "$input_type" in 
+    single)
+        run_type="single"
+        ;;
+    batch_csv)
+        run_type="batch_csv"
+        ;;
+    batch_dir)
+        run_type="batch_dir"
+        ;;
+    terminal)
+        run_type="terminal"
+        ;;
+    *)
+        run_type='help'
+esac
+
+if [ "$run_type" == "help" ]; then
+    run_cmd="docker run -it fsbs:latest --help"
+    echo 
+elif [ "$run_type" == "terminal" ]; then
+
+    run_cmd="docker run -it --user $UID -v $(pwd):/data fsbs:latest terminal ${@:2}"
+else
+    run_cmd="docker run -it --user $UID -v $(pwd):/data fsbs:latest $run_type ${@:2}"
+    echo 
+fi
+
+echo "$run_cmd"
+eval $run_cmd
