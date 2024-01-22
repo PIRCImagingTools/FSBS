@@ -60,8 +60,6 @@ SHELL ["/bin/bash", "-c"]
 Run echo "alias python=python3.7" >> ~/.bashrc && \
     echo "alias python=python3.7" >> /etc/profile && source /etc/profile
 
-COPY .vimrc /root/.vimrc
-
 ENV HOME=/home
 
 RUN chmod -R 777 /home
