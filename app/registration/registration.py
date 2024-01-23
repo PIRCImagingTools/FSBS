@@ -449,10 +449,14 @@ def batch_registration_dir(path, ga_excel, search_term = None, exclude_term = No
     path = os.path.abspath(path)
     skip_dirs = ['.ipynb_checkpoints'] # Common directories that need skipped
     subj_dirs = [os.path.join(path, x) for x in os.listdir(path) if os.path.isdir(os.path.join(path, x)) and x not in skip_dirs]
-    type_dict =  {0: str, 1: object}
+    type_dict =  {0: str, 1: float}
     ga_df = helper.load_excel_or_csv(ga_excel, type_dict = type_dict, colnames=['deid', 'ga'])
     print(ga_df.head(5))
-    return
+    print(ga_df.columns)
+
+
+    print(type_dict)
+    print(ga_df.dtypes)
 
     reconstruction_tuples = []
     for subj_dir in subj_dirs:

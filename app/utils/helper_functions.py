@@ -75,6 +75,8 @@ def find(name, path):
 def load_excel_or_csv(excel_path, type_dict = None, colnames=None):
     excel_abs_path = os.path.abspath(excel_path)
     suffix = os.path.basename(excel_abs_path).split('.')[1]
+    print("In helper")
+    print(type_dict)
     if suffix.lower() == 'csv':
         df = pd.read_csv(excel_abs_path, dtype = type_dict)
     elif suffix.lower() == 'xlsx' or suffix.lower() == 'xls':
@@ -82,7 +84,9 @@ def load_excel_or_csv(excel_path, type_dict = None, colnames=None):
     else:
         print(f"Unable to read file {excel_abs_path}.")
         sys.exit()
-    
+
+    print(df.dtypes)
+
     df.columns = [x.lower().replace(' ','_') for x in df.columns]
     df.replace('.', np.nan, inplace = True)
 
