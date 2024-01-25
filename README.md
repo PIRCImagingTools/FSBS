@@ -103,7 +103,7 @@ Lastly, if you only want to test how many subjects would be run with a specific 
 ```
 
 >[!NOTE]
-> The file directory and Excel file must be within the current folder, or a folder that is downstream of your current folder for Docker to access the files correctly.
+> The file directory and Excel file must be within the current folder, or a folder that is downstream of your current folder for Docker to access the files correctly. 
 
 ### III. Running FSBS in Batch CSV Mode
 To run FSBS in batch CSV mode, one piece of information is required, but adding additional parameters may help.
@@ -125,4 +125,4 @@ This method also can take a `--dry_run` flag. Below is an example command:
   --dry_run
 ```
 >[!NOTE]
->NOTE: The CSV or Excel file and files referenced in the CSV/Excel must be contained within the current folder, or a folder that is downstream of your current folder for Docker to access the files correctly.
+>NOTE: The CSV or Excel file and files referenced in the CSV/Excel must be contained within the current folder, or a folder that is downstream of your current folder for Docker to access the files correctly. Additionally, when specifying column names, if there are spaces in column names, please add quotes around names, ``` --subject_label "subject id"```
