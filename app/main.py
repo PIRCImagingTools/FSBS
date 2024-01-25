@@ -27,7 +27,7 @@ def build_parser():
 
     # Batch Dir parser setup
     dir_parser = subparser.add_parser(name = 'batch_dir', usage = f'{main_prog} batch_dir [OPTIONS]', help = 'Run batch mode using the directory method')
-    #setup args
+    
     dir_parser.add_argument('directory', 
         help = 'Relative path to perform batch segmentation in.')
     dir_parser.add_argument('ga_excel_path', 
@@ -47,12 +47,14 @@ def build_parser():
     
     # Batch CSV parser setup
     csv_parser = subparser.add_parser(name = 'batch_csv', usage = f'{main_prog} batch_csv [OPTIONS]',
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
         help = 'Run batch mode using the CSV method, will also accept an Excel file.')
+
     csv_parser.add_argument('csv_file', help = 'Relative path to file to perform batch segmentation on.')
-    csv_parser.add_argument('--subject_label',help = "Column label for Subject ID's", default = 'Subject_ID')
-    csv_parser.add_argument('--ga_label',help = "Column label for Subject GA's", default = 'Subject_GA')
-    csv_parser.add_argument('--recon_label',help = "Column label for Recon files", default = 'Recon_file')
-    csv_parser.add_argument('--mask_label',help = "Column label for Mask files", default = 'Mask_file')
+    csv_parser.add_argument('-sl','--subject_label',help = "Column label for Subject IDs", default = 'subject_deid')
+    csv_parser.add_argument('-gl','--ga_label',help = "Column label for Subject GAs", default = 'pma')
+    csv_parser.add_argument('-rl', '--recon_label',help = "Column label for Recon files", default = 'recon_file')
+    csv_parser.add_argument('-ml','--mask_label',help = "Column label for Mask files", default = 'mask_file')
     csv_parser.add_argument('-dr', '--dry_run', 
         help = 'Print number of subjects and any errors and exit without running segmentation.', 
         default = False, action = 'store_true')
@@ -61,6 +63,7 @@ def build_parser():
     # Single parser setup
     single_parser = subparser.add_parser(name = 'single', usage = f'{main_prog} single [OPTIONS]',
         help = 'Run a single registration call')
+
     single_parser.add_argument('name', help = 'Subject DEID')
     single_parser.add_argument('gestational_age', help = 'Subject GA in weeks')
     single_parser.add_argument('recon_file', help = 'Path to the Reconstruced Fetal MRI')
@@ -89,7 +92,8 @@ def main():
             test_parameters = args.test)
 
     elif args.method == 'batch_csv':
-        reg.batch_registration_csv(args.csv_file, 
+        reg.batch_registration_csv(
+            os.path.abspath(os.path.join('/data', args.csv_file)),
             subject_label = args.subject_label, 
             ga_label = args.ga_label, 
             recon_label = args.recon_label, 
@@ -102,4 +106,8 @@ def main():
         parser.print_help()
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\tReceived Keyboard Interrupt, ending program.\n")
+        sys.exit(2)
