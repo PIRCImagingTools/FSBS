@@ -11,22 +11,18 @@ import pathlib
 def find_reconstruction_files(path, search_term = 'recon', exclude_term = None, search_dir = None, exclude_dir = None):
     recon_file, mask_file = None, None
 
-
-    for root, dirs, files in os.walk(path):
-        for f in files:
-            if (exclude_term is not None and exclude_term in f) or os.path.basename(root) == exclude_dir:
+    #for root, dirs, files in os.walk(path):
+    #    for f in files:
+    for f in os.listdir(path):
+            if (exclude_term is not None and exclude_term in f) or os.path.basename(path) == exclude_dir:
                 continue
-            if search_dir is None or os.path.basename(root) == search_dir:
+            if search_dir is None or os.path.basename(path) == search_dir:
                 if search_term in f.lower() and 'mask' not in f.lower() and '.nii' in f.lower():
-                    recon_file = os.path.join(root, f)
+                    recon_file = os.path.join(path, f)
                 if 'mask' in f.lower() and '.nii' in f.lower():
-                    mask_file = os.path.join(root, f)
-                if recon_file is not None and mask_file is not None:
-                    return recon_file, mask_file
-    if recon_file is None or mask_file is None:
-        print(f'recon_file: {recon_file}')
-        print(f'mask_file: {mask_file}')
-        raise FileNotFoundError(f'Was not able to find recon and mask files in {path} location. Please ensure {search_term} and mask is located within filename.')
+                    mask_file = os.path.join(path, f)
+    return recon_file, mask_file
+
 
 def determine_cpu_cores():
     cpu_per = psutil.cpu_percent(interval=1, percpu=True)
@@ -51,7 +47,7 @@ def get_templates(GA, template_dir):
     template = os.path.join(template_dir,'STA' + GA_str + '.nii.gz')
     tissue_template = os.path.join(template_dir,'STA' + GA_str + '_tissue.nii.gz')
     region_template = os.path.join(template_dir,'STA' + GA_str + '_regional.nii.gz') 
-
+    
     return template, tissue_template, region_template
 
 def get_ga(subj_id, ga_df):
@@ -75,8 +71,6 @@ def find(name, path):
 def load_excel_or_csv(excel_path, type_dict = None, colnames=None):
     excel_abs_path = os.path.abspath(excel_path)
     suffix = os.path.basename(excel_abs_path).split('.')[1]
-    print("In helper")
-    print(type_dict)
     if suffix.lower() == 'csv':
         df = pd.read_csv(excel_abs_path, dtype = type_dict)
     elif suffix.lower() == 'xlsx' or suffix.lower() == 'xls':
@@ -84,8 +78,6 @@ def load_excel_or_csv(excel_path, type_dict = None, colnames=None):
     else:
         print(f"Unable to read file {excel_abs_path}.")
         sys.exit()
-
-    print(df.dtypes)
 
     df.columns = [x.lower().replace(' ','_') for x in df.columns]
     df.replace('.', np.nan, inplace = True)
