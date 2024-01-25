@@ -445,7 +445,6 @@ def batch_registration_csv(file_path, subject_label="subject_deid", ga_label="ga
     for key, (col_name, included) in required_args.items():
         rename_dict[col_name] = key
 
-    print(rename_dict)
     df.rename(rename_dict, axis=1, inplace = True)
 
     df['recon_file'] = [os.path.abspath(os.path.join('/data', x)) for x in df['recon_file']]
