@@ -221,15 +221,14 @@ def convert_result_images_to_pdf(img_paths, save_path, output_directory = None):
     for img in img_paths:
         im = PIL.Image.open(img).convert("RGB")
         imgs.append(im)
-
+    
     if output_directory:
         save_path = os.path.join(output_directory, os.path.basename(save_path))
 
     imgs[0].save(save_path, save_all = True, append_images = imgs[1:])
 
-def consolidate_result_images(search_paths, search_string, save_path, output_directory = None):
+def consolidate_result_images(search_string, search_paths, save_path, output_directory = None):
     img_paths = []
-
     for path in search_paths: 
         for root, dirs, files in os.walk(path):
             for f in files:
