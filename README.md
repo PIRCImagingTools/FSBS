@@ -103,7 +103,7 @@ Lastly, if you only want to test how many subjects would be run with a specific 
 ```
 
 >[!NOTE]
-> The file directory and Excel file must be within the current folder, or a folder that is downstream of your current folder for Docker to access the files correctly. 
+> The file directory and Excel file must be within the current folder, or a folder that is downstream of your current folder for Docker to access the files correctly. If specifying search/exclude terms or directories that contain spaces, place them in quotes to avoid errors ```--search_dir "test folder"```
 
 ### III. Running FSBS in Batch CSV Mode
 To run FSBS in batch CSV mode, one piece of information is required, but adding additional parameters may help.
