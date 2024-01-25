@@ -20,16 +20,21 @@ case "$input_type" in
         run_type='help'
 esac
 
+cmd_exit=0
 if [ "$run_type" == "help" ]; then
     run_cmd="docker run -it fsbs:latest --help"
     echo 
 elif [ "$run_type" == "terminal" ]; then
 
-    run_cmd="docker run -it --user $UID -v $(pwd):/data fsbs:latest terminal ${@:2}"
+    run_cmd="docker run -it --user $UID -v $(pwd):/data fsbs:latest terminal"
 else
-    run_cmd="docker run -it --user $UID -v $(pwd):/data fsbs:latest $run_type ${@:2}"
-    echo 
+    run_cmd='docker run -it --user $UID -v $(pwd):/data fsbs:latest $run_type ${@:2}'
+    echo
 fi
 
-echo "$run_cmd"
+#echo "$run_cmd"
 eval $run_cmd
+cmd_exit="$?"
+if [ "$cmd_exit" -ne 0 ]; then
+    exit "$cmd_exit"
+fi
