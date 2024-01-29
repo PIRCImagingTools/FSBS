@@ -33,7 +33,7 @@ docker build -t fsbs:latest .
 
 Before running FSBS for the first time. The location of the FSBS script should be added to your path. To accomplish this run the following command from the FSBS directory:
 ```bash
-echo "export PATH=${PATH}:$(pwd)" >> ~/.profile && source ~/.profile
+echo "export PATH=\${PATH}:$(pwd)" >> ~/.bashrc && source ~/.bashrc
 ```
 
 >[!NOTE]
