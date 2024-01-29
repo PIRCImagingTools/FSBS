@@ -37,6 +37,7 @@ def registration(
     if test_parameters:
         iterations = 1
         orient_iterations = 1
+        repeat = True
     else:
         iterations = 250
 
