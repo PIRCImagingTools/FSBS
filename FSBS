@@ -21,14 +21,16 @@ case "$input_type" in
 esac
 
 cmd_exit=0
+docker_image="fsbs:latest"
+
 if [ "$run_type" == "help" ]; then
     run_cmd="docker run -it fsbs:latest --help"
     echo 
 elif [ "$run_type" == "terminal" ]; then
 
-    run_cmd="docker run -it --user $UID -v $(pwd):/data fsbs:latest terminal"
+    run_cmd="docker run -it --user $UID -v $(pwd):/data ${docker_image} terminal"
 else
-    run_cmd='docker run -it --user $UID -v $(pwd):/data fsbs:latest $run_type ${@:2}'
+    run_cmd="docker run -it --user $UID -v $(pwd):/data ${docker_image} $run_type ${@:2}"
     echo
 fi
 
