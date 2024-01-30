@@ -370,7 +370,7 @@ def registration(
 ################################################################################
 # Below functions are batched versions of the main registration function
 
-def batch_run(df, path, dry_run=False, test_parameters=False): 
+def batch_run(df, path, dry_run=False, test_parameters=False, repeat = False):
 
     pre_drop_number = len(df)
     clean_df = df.dropna(axis = 0, how = 'any', inplace = False)
@@ -390,7 +390,7 @@ def batch_run(df, path, dry_run=False, test_parameters=False):
         try:
             if not dry_run:
                 #print(f"Subject: {s['subject_deid']}, PMA: {s['pma']},recon_file: {s['recon_file']},mask_file: {s['mask_file']},test_parameters: {test_parameters}") 
-                registration(str(s['subject_deid']), float(s['pma']),s['recon_file'],s['mask_file'],test_parameters=test_parameters)
+                registration(str(s['subject_deid']), float(s['pma']),s['recon_file'],s['mask_file'],test_parameters=test_parameters, repeat=repeat)
                 subject_paths.append(os.path.dirname(s['recon_file']))
         except Exception as e:
             print(f"Skipping subject {s['subject_deid']} due to error {e}")
@@ -405,7 +405,7 @@ def batch_run(df, path, dry_run=False, test_parameters=False):
         vt.consolidate_result_images('region_seg.png', subject_paths, region_summary_pdf)
 
 def batch_registration_csv(file_path, subject_label="subject_deid", ga_label="ga",
-    recon_label = "recon", mask_label = "mask", dry_run = False, test_parameters=False):
+    recon_label = "recon", mask_label = "mask", dry_run = False, test_parameters=False, repeat=False):
 
     if not os.path.isfile(file_path):
         print('\n\tCSV/Excel file not found. Try again.\n')
@@ -452,10 +452,10 @@ def batch_registration_csv(file_path, subject_label="subject_deid", ga_label="ga
     df['mask_file'] = [os.path.abspath(os.path.join('/data', x)) for x in df['mask_file']]
 
     out_path = os.path.dirname(file_path)
-    batch_run(df, out_path, dry_run = dry_run, test_parameters = test_parameters)
+    batch_run(df, out_path, dry_run = dry_run, test_parameters = test_parameters, repeat = repeat)
 
 def batch_registration_dir(path, ga_excel, search_term = None, exclude_term = None, 
-                            search_dir = None, exclude_dir = None, dry_run = False, test_parameters=False):
+                            search_dir = None, exclude_dir = None, dry_run = False, test_parameters=False, repeat=False):
     path = os.path.abspath(path)
     skip_dirs = ['.ipynb_checkpoints'] # Common directories that need skipped
     subj_dirs = [os.path.join(path, x) for x in os.listdir(path) if os.path.isdir(os.path.join(path, x)) and x not in skip_dirs]
@@ -473,7 +473,7 @@ def batch_registration_dir(path, ga_excel, search_term = None, exclude_term = No
         ser = pd.Series({'subject_deid':subj_id, 'pma':subj_pma, 'recon_file':recon_file, 'mask_file':mask_file}) 
         df = pd.concat([df, ser.to_frame().T], axis = 0)
 
-    batch_run(df, path, dry_run = dry_run, test_parameters = test_parameters)
+    batch_run(df, path, dry_run = dry_run, test_parameters = test_parameters, repeat = repeat)
 
 
 
