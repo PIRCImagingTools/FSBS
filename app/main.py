@@ -7,6 +7,8 @@ import utils.extract_volumes as ev
 
 
 class MyParser(argparse.ArgumentParser):
+    # Purpose of extending ArgumentParser class is to redefine how parser acts on erros
+    # now will print out the parser help message
     def error(self, message):
         sys.stderr.write('error: %s\n' % message)
         self.print_help()
@@ -43,7 +45,8 @@ def build_parser():
     dir_parser.add_argument('-dr', '--dry_run', 
         help = 'Print number of subjects and any errors and exit without running segmentation.', 
         default = False, action = 'store_true')
-    dir_parser.add_argument('--test', default = False, action="store_true", help = argparse.SUPPRESS)
+    dir_parser.add_argument('--test', default = False, action="store_true", help = argparse.SUPPRESS) # For testing
+    dir_parser.add_argument('--repeat', default = False, action="store_true", help = argparse.SUPPRESS) # For testing
     
     # Batch CSV parser setup
     csv_parser = subparser.add_parser(name = 'batch_csv', usage = f'{main_prog} batch_csv [OPTIONS]',
@@ -58,7 +61,8 @@ def build_parser():
     csv_parser.add_argument('-dr', '--dry_run', 
         help = 'Print number of subjects and any errors and exit without running segmentation.', 
         default = False, action = 'store_true')
-    csv_parser.add_argument('--test', default = False, action="store_true", help = argparse.SUPPRESS)
+    csv_parser.add_argument('--test', default = False, action="store_true", help = argparse.SUPPRESS) # For testing
+    csv_parser.add_argument('--repeat', default = False, action="store_true", help = argparse.SUPPRESS) # For testing
 
     # Single parser setup
     single_parser = subparser.add_parser(name = 'single', usage = f'{main_prog} single [OPTIONS]',
@@ -68,7 +72,9 @@ def build_parser():
     single_parser.add_argument('gestational_age', help = 'Subject GA in weeks')
     single_parser.add_argument('recon_file', help = 'Path to the Reconstruced Fetal MRI')
     single_parser.add_argument('mask_file', help = 'Path to mask file')
-    single_parser.add_argument('--test', default = False, action="store_true", help = argparse.SUPPRESS)
+    single_parser.add_argument('--test', default = False, action="store_true", help = argparse.SUPPRESS) # For testing
+    single_parser.add_argument('--repeat', default = False, action="store_true", help = argparse.SUPPRESS) # For testing
+    
     return parser
 
 def main():
@@ -78,7 +84,7 @@ def main():
     if args.method == 'single':
         recon_path = os.path.abspath(os.path.join('/data', args.recon_file))
         mask_path = os.path.abspath(os.path.join('/data', args.mask_file))
-        reg.registration(args.name, args.gestational_age, recon_path, mask_path, test_parameters=args.test)
+        reg.registration(args.name, args.gestational_age, recon_path, mask_path, test_parameters=args.test, repeat=args.repeat)
 
     elif args.method == 'batch_dir':
         batch_dir = os.path.abspath(os.path.join('/data', args.directory))
@@ -89,7 +95,8 @@ def main():
             search_dir = args.search_dir,
             exclude_dir = args.exclude_dir, 
             dry_run = args.dry_run, 
-            test_parameters = args.test)
+            test_parameters = args.test, 
+            repeat = args.repeat)
 
     elif args.method == 'batch_csv':
         reg.batch_registration_csv(
@@ -99,7 +106,8 @@ def main():
             recon_label = args.recon_label, 
             mask_label = args.mask_label, 
             dry_run = args.dry_run,
-            test_parameters = args.test)
+            test_parameters = args.test,
+            repeat = args.repeat)
 
 
     elif args.method is None:
