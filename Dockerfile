@@ -5,19 +5,20 @@ ENV DEBIAN_FRONTEND=noninteractive
 ARG COMPILER_THREADS=4
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    apt-utils=2.4.11 \
-    wget=1.21.2-2ubuntu1 \
-    gnupg=2.2.27-3ubuntu2.1 \
-    vim=2:8.2.3995-1ubuntu2.15 \
-    git-all=1:2.34.1-1ubuntu1.10 \
-    cmake=3.22.1-1ubuntu1.22.04.1 \
-    g++=4:11.2.0-1ubuntu1 \
-    zlib1g-dev=1:1.2.11.dfsg-2ubuntu9.2 \
-    software-properties-common=0.99.22.9
+    apt-utils \
+    wget \
+    gnupg \ 
+    vim \ 
+    git-all \
+    cmake \
+    g++ \
+    zlib1g-dev \
+    software-properties-common
 
-RUN add-apt-repository ppa:deadsnakes/ppa -y && apt-get install -y --no-install-recommends \
-    python3.7=3.7.17-1+jammy1 \
-    python2.7=2.7.18-13ubuntu1.1 \ 
+#RUN add-apt-repository ppa:deadsnakes/ppa -y && apt-get install -y \ #--no-install-recommends \
+RUN add-apt-repository ppa:deadsnakes/ppa -y && apt-get install -y \
+    python3.7 \
+    python2.7 \ 
     python3-pip \
     python3.7-distutils 
 
